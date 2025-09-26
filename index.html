@@ -142,13 +142,21 @@
             </div>
         </div>
 
-        <!-- Add Order Button -->
-        <div class="mb-8">
+
+
+        <!-- Add Order Buttons -->
+        <div class="mb-8 flex flex-wrap gap-4">
             <button onclick="showAddOrderModal()" class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-200 transform hover:scale-105">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
                 ເພີ່ມອໍເດີໃໝ່
+            </button>
+            <button onclick="showBulkOrderModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition duration-200 transform hover:scale-105">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                ເພີ່ມຫຼາຍອໍເດີ
             </button>
         </div>
 
@@ -164,6 +172,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ລະຫັດອໍເດີ</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ລູກຄ້າ</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ສິນຄ້າ</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ຈຳນວນ</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ລາຄາ</th>
@@ -181,7 +190,7 @@
         </div>
     </div>
 
-    <!-- Add Order Modal -->
+    <!-- Add Single Order Modal -->
     <div id="addOrderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
             <div class="flex justify-between items-center mb-4">
@@ -192,7 +201,7 @@
                     </svg>
                 </button>
             </div>
-            <form id="addOrderForm" onsubmit="addOrder(event)">
+            <form id="addOrderForm" onsubmit="addSingleOrder(event)">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">ສິນຄ້າ</label>
                     <input type="text" id="productName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="ປ້ອນຊື່ສິນຄ້າ">
@@ -211,6 +220,45 @@
                     </button>
                     <button type="submit" class="px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-800">
                         ບັນທຶກ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Bulk Orders Modal -->
+    <div id="bulkOrderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">ເພີ່ມຫຼາຍອໍເດີ</h3>
+                <button onclick="hideBulkOrderModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="bulkOrderForm" onsubmit="addBulkOrders(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ລາຍການສິນຄ້າ (ແຕ່ລະແຖວ = 1 ອໍເດີ)</label>
+                    <textarea id="bulkOrderItems" required rows="8" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ຕົວຢ່າງ:
+ເຂົ້າຈີ່ 2 15000
+ລາບ 1 25000
+ຕຳໝາກຫຸ່ງ 3 12000
+
+ຮູບແບບ: ຊື່ສິນຄ້າ ຈຳນວນ ລາຄາ"></textarea>
+                </div>
+                <div class="mb-6 p-3 bg-blue-50 rounded-md">
+                    <p class="text-sm text-blue-700">
+                        <strong>ວິທີໃຊ້:</strong> ແຕ່ລະແຖວຈະເປັນອໍເດີແຍກກັນ<br>
+                        ຮູບແບບ: ຊື່ສິນຄ້າ ຈຳນວນ ລາຄາ (ຄັ່ນດ້ວຍຊ່ອງວ່າງ)
+                    </p>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="hideBulkOrderModal()" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50">
+                        ຍົກເລີກ
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        ບັນທຶກທັງໝົດ
                     </button>
                 </div>
             </form>
@@ -334,6 +382,8 @@
         // Orders data - loaded from localStorage
         let orders = [];
 
+
+
         // Load data from localStorage
         function loadOrders() {
             const savedOrders = localStorage.getItem('orders');
@@ -354,6 +404,8 @@
             renderOrders();
             updateStats();
         });
+
+
 
         function updateCurrentDate() {
             const today = new Date();
@@ -379,6 +431,7 @@
                 
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${order.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.customer || '-'}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.product}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.quantity}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.price.toLocaleString()} ກີບ</td>
@@ -471,12 +524,17 @@
             document.getElementById('addOrderForm').reset();
         }
 
-        function addOrder(event) {
+        function addSingleOrder(event) {
             event.preventDefault();
             
-            const productName = document.getElementById('productName').value;
+            const productName = document.getElementById('productName').value.trim();
             const quantity = parseInt(document.getElementById('quantity').value);
             const price = parseInt(document.getElementById('price').value);
+            
+            if (!productName || !quantity || !price) {
+                showNotification('ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ!', 'error');
+                return;
+            }
             
             // Generate unique order ID
             const orderNumber = orders.length > 0 ? 
@@ -484,6 +542,7 @@
             
             const newOrder = {
                 id: 'ORD' + String(orderNumber).padStart(3, '0'),
+                customer: '-',
                 product: productName,
                 quantity: quantity,
                 price: price,
@@ -497,8 +556,84 @@
             updateStats();
             hideAddOrderModal();
             
-            // Show success notification
             showNotification('ເພີ່ມອໍເດີສຳເລັດແລ້ວ!', 'success');
+        }
+
+        function showBulkOrderModal() {
+            document.getElementById('bulkOrderModal').classList.remove('hidden');
+            document.getElementById('bulkOrderModal').classList.add('flex');
+        }
+
+        function hideBulkOrderModal() {
+            document.getElementById('bulkOrderModal').classList.add('hidden');
+            document.getElementById('bulkOrderModal').classList.remove('flex');
+            document.getElementById('bulkOrderForm').reset();
+        }
+
+        function addBulkOrders(event) {
+            event.preventDefault();
+            
+            const orderItemsText = document.getElementById('bulkOrderItems').value.trim();
+            
+            if (!orderItemsText) {
+                showNotification('ກະລຸນາປ້ອນລາຍການສິນຄ້າ!', 'error');
+                return;
+            }
+            
+            const lines = orderItemsText.split('\n').filter(line => line.trim() !== '');
+            let successCount = 0;
+            let errorCount = 0;
+            
+            // Get starting order number
+            let orderNumber = orders.length > 0 ? 
+                Math.max(...orders.map(o => parseInt(o.id.replace('ORD', '')))) + 1 : 1;
+            
+            lines.forEach(line => {
+                const parts = line.trim().split(/\s+/);
+                
+                if (parts.length >= 3) {
+                    // Last two parts are quantity and price
+                    const quantity = parseInt(parts[parts.length - 2]);
+                    const price = parseInt(parts[parts.length - 1]);
+                    // Everything else is the product name
+                    const productName = parts.slice(0, -2).join(' ');
+                    
+                    if (!isNaN(quantity) && !isNaN(price) && quantity > 0 && price > 0 && productName) {
+                        const newOrder = {
+                            id: 'ORD' + String(orderNumber).padStart(3, '0'),
+                            customer: '-',
+                            product: productName,
+                            quantity: quantity,
+                            price: price,
+                            date: new Date().toISOString().split('T')[0],
+                            status: 'ສຳເລັດ'
+                        };
+                        
+                        orders.unshift(newOrder);
+                        orderNumber++;
+                        successCount++;
+                    } else {
+                        errorCount++;
+                    }
+                } else {
+                    errorCount++;
+                }
+            });
+            
+            if (successCount > 0) {
+                saveOrders();
+                renderOrders();
+                updateStats();
+                hideBulkOrderModal();
+                
+                if (errorCount > 0) {
+                    showNotification(`ເພີ່ມສຳເລັດ ${successCount} ອໍເດີ, ຜິດພາດ ${errorCount} ແຖວ`, 'success');
+                } else {
+                    showNotification(`ເພີ່ມອໍເດີສຳເລັດ ${successCount} ອໍເດີ!`, 'success');
+                }
+            } else {
+                showNotification('ບໍ່ສາມາດເພີ່ມອໍເດີໄດ້! ກະລຸນາກວດສອບຮູບແບບ', 'error');
+            }
         }
 
         function editOrder(orderId) {
@@ -630,5 +765,5 @@
             document.getElementById('notification').classList.add('hidden');
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98525a3c738aff96',t:'MTc1ODg4NTQyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98526abe01fa0707',t:'MTc1ODg4NjA5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
